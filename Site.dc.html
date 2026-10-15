@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Digestoroom Сервис</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Evolventa';src:url('./assets/e7a9aaf4b480b4ccf91226fbe61f2c07.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Evolventa';src:url('./assets/69bcc99ddb035b713990b3849dd9380e.ttf') format('truetype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Evolventa';src:url('./assets/afbe1849c812dc7125a6c088e7f908a0.ttf') format('truetype');font-weight:700;font-style:italic;font-display:swap}
+body{margin:0;background:#0B0C0E}
+a{color:#D9DDE2}a:hover{color:#FFFFFF}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+section{scroll-margin-top:72px}
+input,select,textarea,button{font:inherit;color:inherit}
+:focus-visible{outline:1px solid #F2F3F5;outline-offset:4px}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-weight:400;letter-spacing:.04em}
+.disp{font-family:'Evolventa','Jost',sans-serif;font-weight:700}
+.silver-text{background:linear-gradient(100deg,#8A9098 0%,#EEF0F3 36%,#A6ACB4 62%,#DADDE2 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sline{height:1px;background:linear-gradient(90deg,#6E747C 0%,#E2E5E9 35%,#8E949C 65%,#C9CDD2 100%)}
+.label{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#AEB4BC}
+.label i{display:block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #C5CAD1}
+.h2{margin:0;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:clamp(32px,3.6vw,52px);line-height:1.08;letter-spacing:-.01em;color:#F4F5F6;text-wrap:balance}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:50;transition:background .35s,backdrop-filter .35s,border-color .35s;border-bottom:1px solid transparent}
+.hdr.scrolled{background:rgba(11,12,14,.74);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom-color:#1F2226}
+.hdr-in{height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;transition:height .35s}
+.hdr.scrolled .hdr-in{height:64px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.brand img{width:34px;height:33px;object-fit:contain;transition:width .35s,height .35s}
+.hdr.scrolled .brand img{width:28px;height:27px}
+.brand-word{display:flex;flex-direction:column;line-height:1.15;transition:opacity .3s,max-width .35s;max-width:200px;overflow:hidden;white-space:nowrap}
+.hdr.scrolled .brand-word{opacity:0;max-width:0}
+.nav{display:flex;gap:36px}
+.nav a{position:relative;color:#9AA0A8;text-decoration:none;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:10px 0}
+.nav a:hover{color:#ECEDEF}
+.nav a.on{color:#ECEDEF}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.nav a.on::after{transform:scaleX(1)}
+.hdr-act{display:flex;align-items:center;gap:10px}
+.ico{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #2A2D32;color:#C5CAD1;text-decoration:none;transition:border-color .2s,color .2s}
+.ico:hover{border-color:#8E949C;color:#FFFFFF}
+.btn-hdr{display:inline-flex;align-items:center;min-height:44px;padding:0 22px;border:1px solid #C5CAD1;color:#F2F3F5;text-decoration:none;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;transition:background .2s,color .2s}
+.btn-hdr:hover{background:#F2F3F5;color:#0B0C0E}
+.btn-hdr:active{background:#C5CAD1;color:#0B0C0E}
+.burger{display:none;width:44px;height:44px;border:1px solid #2A2D32;background:transparent;cursor:pointer;align-items:center;justify-content:center}
+.progress{position:absolute;left:0;bottom:-1px;height:1px;width:100%;transform-origin:left;background:linear-gradient(90deg,#6E747C,#EEF0F3)}
+
+/* mobile menu */
+.mm{position:fixed;inset:0;z-index:60;background:#0B0C0E;display:flex;flex-direction:column;padding:20px}
+.mm-top{display:flex;justify-content:space-between;align-items:center;height:48px}
+.mm-list{flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.mm-list a{display:flex;align-items:baseline;gap:18px;padding:18px 0;border-bottom:1px solid #1F2226;text-decoration:none;color:#ECEDEF;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:34px}
+.mm-list a span{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:13px;color:#AEB4BC}
+.mm-bottom{display:flex;flex-direction:column;gap:12px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 32px;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;border:1px solid transparent;cursor:pointer;transition:filter .2s,background .2s,color .2s,border-color .2s}
+.btn-p{color:#0B0C0E}
+.btn-p:hover{filter:brightness(.88)}
+.btn-p:active{filter:brightness(.78)}
+.btn-s{color:#ECEDEF;border-color:#3A3E44;background:transparent}
+.btn-s:hover{border-color:#C5CAD1}
+.btn[disabled]{opacity:.38;cursor:not-allowed;filter:none}
+
+/* hero */
+.hero{position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:56px;align-items:center;min-height:720px;padding:56px 0 120px}
+.h1{margin:0;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:clamp(34px,4.3vw,64px);line-height:1.06;text-wrap:balance;letter-spacing:-.015em}
+.h1 .a{display:block;color:#6E747C}
+.h1 .b{display:block;color:#F7F8F9}
+.h1-rule{display:flex;align-items:center;gap:14px;margin:22px 0 18px}
+.h1-rule .sline{flex:1;max-width:420px}
+.mark-stage{position:relative;aspect-ratio:1/1;width:100%;max-width:520px;margin-left:auto}
+.mark-stage .layer{position:absolute;inset:0;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.mark-img{position:absolute;left:22%;top:22%;width:56%;height:56%;object-fit:contain;animation:markIn 1.8s cubic-bezier(.2,.7,.2,1) .15s both}
+@keyframes markIn{from{clip-path:inset(100% 0 0 0);opacity:.2;filter:blur(6px)}to{clip-path:inset(0 0 0 0);opacity:.95;filter:blur(0)}}
+.ring{fill:none;stroke-width:1;stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 2s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.scroll-hint{position:absolute;left:40px;bottom:36px;display:flex;align-items:center;gap:14px;text-decoration:none;color:#9AA0A8;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+.scroll-hint .stem{position:relative;width:1px;height:44px;background:#2A2D32;overflow:hidden}
+.scroll-hint .stem::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:#EEF0F3;animation:drip 2.2s ease-in-out infinite}
+@keyframes drip{to{top:100%}}
+
+/* reveal */
+.anim [data-rv] .rv-up{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.anim [data-rv].in .rv-up{opacity:1;transform:none}
+.anim [data-rv] .d1{transition-delay:.12s}.anim [data-rv] .d2{transition-delay:.3s}.anim [data-rv] .d3{transition-delay:.48s}.anim [data-rv] .d4{transition-delay:.66s}
+.anim [data-rv] .draw-x{transform:scaleX(0);transform-origin:left;transition:transform 1.5s cubic-bezier(.4,0,.2,1)}
+.anim [data-rv].in .draw-x{transform:scaleX(1)}
+
+/* numbers */
+.nums{background:#15171B;border-top:1px solid #23262B;border-bottom:1px solid #23262B}
+.nums-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.num{padding:72px 32px 64px;position:relative}
+.num + .num::before{content:"";position:absolute;left:0;top:56px;bottom:56px;width:1px;background:linear-gradient(180deg,transparent,#B9BEC5 30%,#7E848C 70%,transparent)}
+.num:first-child{padding-left:0}
+.num-v{display:flex;align-items:baseline;gap:8px;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:clamp(64px,6.4vw,96px);line-height:.95;font-variant-numeric:tabular-nums}
+.num-u{font-size:.32em;letter-spacing:.02em}
+.num-c{margin-top:18px;font-size:15px;color:#9AA0A8;max-width:220px}
+
+/* steps */
+.sec{padding:140px 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:56px;align-items:end;margin-bottom:88px}
+.lead{margin:0;font-size:19px;font-weight:300;line-height:1.6;color:#B4B9C0}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:24px}
+.plus{margin-top:112px}
+.plus-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px;margin-top:36px}
+.plus-n{margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7E848C}
+.plus-t{margin:12px 0 0;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:22px;line-height:1.25;color:#F4F5F6}
+@media (max-width:1024px){.plus-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:768px){.plus-grid{grid-template-columns:minmax(0,1fr);gap:8px}}
+.lane{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#7E848C;display:flex;align-items:center;height:36px}
+.lane-cell{height:36px;display:flex;align-items:center}
+.lane-dot{width:7px;height:7px;border:1px solid #9AA0A8;border-radius:50%}
+.lane-dot.f{background:#C5CAD1;border-color:#C5CAD1}
+.track{grid-column:1 / -1;position:relative;height:56px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:24px;align-items:center}
+.track .sline{position:absolute;left:0;right:0;top:50%}
+.mk{position:relative;z-index:1;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:#0B0C0E;border:1px solid #6E747C;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#C5CAD1}
+.mk.end{border-color:currentColor}
+.step-t{margin:28px 0 12px;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:22px;line-height:1.2;color:#F4F5F6}
+.step-p{margin:0;font-size:15.5px;line-height:1.6;color:#9AA0A8}
+.role{display:none;margin-top:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7E848C}
+
+/* includes */
+.inc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px}
+.inc-h{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:20px;border-bottom:1px solid #2A2D32;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:26px;color:#F4F5F6}
+.inc-h span{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:12px;color:#7E848C;letter-spacing:.1em}
+.inc-lead{margin:28px 0 20px;font-family:'Evolventa','Jost',sans-serif;font-style:italic;font-weight:400;font-size:21px;line-height:1.4;color:#C5CAD1;padding-left:22px;position:relative}
+.inc-lead::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg,#EEF0F3,#6E747C)}
+.inc-list{list-style:none;margin:0;padding:0}
+.inc-list li{display:flex;gap:22px;align-items:baseline;padding:18px 12px;border-bottom:1px solid #1F2226;font-size:17px;color:#D9DCE0;transition:background .25s}
+.inc-list li:hover{background:#15171B}
+.inc-list li span{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7E848C;min-width:22px}
+.tabs{display:none;gap:0;margin-bottom:32px;border:1px solid #2A2D32}
+.tabs button{flex:1;min-height:48px;background:transparent;border:0;cursor:pointer;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9AA0A8}
+.tabs button.on{background:#ECEDEF;color:#0B0C0E}
+
+/* formats */
+.fmt-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
+.fmt{padding:1px;background:linear-gradient(135deg,#E6E9ED 0%,#6E747C 35%,#2A2D32 60%,#B5BAC1 100%)}
+.fmt-in{height:100%;background:#0F1113;padding:44px 44px 40px;display:flex;flex-direction:column;gap:20px}
+.fmt-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#AEB4BC}
+.fmt-t{margin:0;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:34px;color:#F4F5F6}
+.fmt-p{margin:0;font-size:17px;line-height:1.6;color:#B4B9C0;max-width:440px}
+.scheme{margin-top:auto;padding-top:28px;border-top:1px solid #1F2226}
+
+/* audience */
+.aud{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:80px;align-items:start}
+.aud-l{position:sticky;top:120px;display:flex;flex-direction:column;gap:28px}
+.aud-item{display:grid;grid-template-columns:96px minmax(0,1fr);gap:24px;padding:40px 0;border-top:1px solid #2A2D32;transition:border-color .35s}
+.aud-item:last-child{border-bottom:1px solid #2A2D32}
+.aud-item:hover{border-top-color:#ECEDEF}
+.aud-letter{font-family:'IBM Plex Mono',monospace;font-size:28px;color:#8E949C;line-height:1;transition:transform .35s,color .35s;transform-origin:left top}
+.aud-item:hover .aud-letter{transform:scale(1.5);color:#ECEDEF}
+.aud-t{margin:0 0 10px;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:26px;color:#F4F5F6}
+.aud-p{margin:0;font-size:17px;line-height:1.6;color:#9AA0A8}
+
+/* responsibility */
+.resp{background:#111316}
+.resp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px}
+.resp-h{margin:28px 0 16px;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:clamp(34px,3.4vw,48px);line-height:1;color:#F4F5F6}
+.resp-p{margin:0;font-size:17px;line-height:1.6;color:#9AA0A8;max-width:320px}
+
+/* manager */
+.mgr{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:72px;align-items:center}
+.photo{position:relative;aspect-ratio:4/5;width:100%;overflow:hidden;background:#8D8F92}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:50% 38%;display:block;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent 100%);mask-image:linear-gradient(180deg,#000 72%,transparent 100%)}
+.photo-wrap{background:linear-gradient(180deg,#9A9C9F 0%,#5B5E62 60%,#0B0C0E 100%)}
+.sig{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:#AEB4BC}
+.sig b{font-weight:400;color:#5E636B}
+.quote{position:relative;margin:8px 0 0;padding-top:56px;font-family:'Evolventa','Jost',sans-serif;font-style:italic;font-weight:400;font-size:clamp(24px,2.2vw,31px);line-height:1.38;color:#ECEDEF;text-wrap:pretty}
+.quote-mark{position:absolute;left:0;top:0}
+.awards{margin-top:16px;border-top:1px solid #2A2D32}
+.aw{display:flex;justify-content:space-between;gap:24px;padding:16px 0;border-bottom:1px solid #1F2226;font-size:15.5px;color:#D9DCE0}
+.aw span{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#AEB4BC;white-space:nowrap}
+
+/* faq */
+.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:80px;align-items:start}
+.fq{border-top:1px solid #2A2D32}
+.fq:last-child{border-bottom:1px solid #2A2D32}
+.fq-b{width:100%;display:grid;grid-template-columns:44px minmax(0,1fr) 32px;gap:16px;align-items:center;text-align:left;background:transparent;border:0;cursor:pointer;padding:28px 0;min-height:44px}
+.fq-n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#7E848C}
+.fq-q{font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:21px;line-height:1.3;color:#F4F5F6}
+.fq-x{position:relative;width:18px;height:18px;justify-self:end;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.fq-x::before,.fq-x::after{content:"";position:absolute;left:0;top:50%;width:18px;height:1px;background:#C5CAD1}
+.fq-x::after{transform:rotate(90deg)}
+.fq.open .fq-x{transform:rotate(135deg)}
+.fq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.7,.2,1)}
+.fq.open .fq-a{grid-template-rows:1fr}
+.fq-a > div{overflow:hidden}
+.fq-a p{margin:0;padding:0 48px 30px 60px;font-size:17px;line-height:1.65;color:#B4B9C0}
+
+/* form */
+.cta{background:#060708;position:relative;overflow:hidden}
+.cta-mark{position:absolute;right:-6%;top:50%;width:56%;max-width:760px;transform:translateY(-50%);opacity:.05;pointer-events:none}
+.cta-grid{position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:88px;align-items:start}
+.contact{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-bottom:1px solid #1F2226;text-decoration:none;color:#F4F5F6;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:24px;transition:padding .3s}
+.contact:hover{padding-left:10px;color:#FFFFFF}
+.contact small{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:12px;color:#7E848C;letter-spacing:.14em;text-transform:uppercase}
+.form{display:flex;flex-direction:column;gap:26px;background:#0D0F11;border:1px solid #1F2226;padding:48px}
+.f-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.fld{display:flex;flex-direction:column;gap:10px}
+.fld label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#AEB4BC}
+.fld input,.fld select,.fld textarea{width:100%;background:transparent;border:0;border-bottom:1px solid #3A3E44;padding:10px 0 12px;font-size:17px;color:#F4F5F6;outline:none;border-radius:0;transition:border-color .2s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-bottom-color:#ECEDEF}
+.fld input::placeholder,.fld textarea::placeholder{color:#5E636B}
+.fld.err input{border-bottom-color:#E08A7A}
+.fld .msg{font-size:13.5px;color:#EBA393}
+.fld select{appearance:none;-webkit-appearance:none;cursor:pointer}
+.fld select option{background:#0D0F11;color:#ECEDEF}
+.sel{position:relative}
+.sel svg{position:absolute;right:2px;top:50%;transform:translateY(-50%);pointer-events:none}
+.fld textarea{resize:none;min-height:56px;field-sizing:content;line-height:1.5}
+.consent{display:grid;grid-template-columns:22px minmax(0,1fr);gap:14px;align-items:start;cursor:pointer;font-size:14px;line-height:1.55;color:#9AA0A8}
+.consent input{position:absolute;opacity:0;width:1px;height:1px}
+.box{width:22px;height:22px;border:1px solid #6E747C;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:border-color .2s}
+.consent:hover .box{border-color:#C5CAD1}
+.consent input:focus-visible + .box{outline:1px solid #F2F3F5;outline-offset:3px}
+.alert{display:flex;flex-direction:column;gap:6px;padding:16px 18px;border:1px solid #6B3A31;background:#1A0F0D;font-size:14.5px;color:#EBC2B8}
+.done{display:flex;flex-direction:column;align-items:flex-start;gap:22px;background:#0D0F11;border:1px solid #1F2226;padding:56px 48px;min-height:520px;justify-content:center}
+.check{fill:none;stroke-width:1.5;stroke-dasharray:120;stroke-dashoffset:120;animation:draw 1s cubic-bezier(.4,0,.2,1) .9s forwards}
+
+/* footer */
+.foot{border-top:1px solid #1F2226;padding-top:72px;overflow:hidden}
+.foot-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr) minmax(0,3fr);gap:48px}
+.req{font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.9;color:#AEB4BC;letter-spacing:.02em}
+.foot a{text-decoration:none}
+.top-btn{width:52px;height:52px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #3A3E44;color:#C5CAD1;text-decoration:none;transition:border-color .2s,transform .3s}
+.top-btn:hover{border-color:#ECEDEF;transform:translateY(-3px)}
+.word{margin-top:88px;height:.62em;font-family:'Evolventa','Jost',sans-serif;font-weight:700;font-size:clamp(64px,15.6vw,236px);line-height:.86;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-align:center}
+
+/* tablet */
+@media (max-width:1024px){
+.nav{display:none}
+.burger{display:inline-flex}
+.hdr-act .ico,.hdr-act .btn-hdr{display:none}
+.hero-grid,.sec-head,.mgr,.cta-grid,.aud,.faq{grid-template-columns:minmax(0,1fr);gap:48px}
+.aud-l{position:static}
+.mark-stage{max-width:360px;margin:0}
+.nums-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.num:nth-child(3){padding-left:0}
+.num:nth-child(3)::before{display:none}
+.num:nth-child(n+3){border-top:1px solid #23262B}
+.foot-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+/* phone & small tablet */
+@media (max-width:768px){
+.wrap{padding:0 20px}
+.sec{padding:96px 0}
+.hero-grid{padding:24px 0 112px;min-height:0;gap:28px}
+.hero-mark{order:-1}
+.mark-stage{max-width:160px}
+.h1{font-size:33px}
+.hero-btns .btn{width:100%}
+.scroll-hint{left:20px}
+.num{padding:44px 16px 40px}
+.num:nth-child(odd){padding-left:0}
+.num-c{font-size:14px}
+.steps{grid-template-columns:56px minmax(0,1fr);row-gap:0}
+.lane,.lane-cell,.track,.sp{display:none}
+.vstep{grid-column:1 / -1;display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;padding-bottom:36px;position:relative}
+.vstep::before{content:"";position:absolute;left:28px;top:56px;bottom:0;width:1px;background:linear-gradient(180deg,#C5CAD1,#3A3E44)}
+.vstep:last-child::before{display:none}
+.vstep .mk-m{display:flex}
+.vstep .step-t{margin-top:12px}
+.role{display:block}
+.inc{grid-template-columns:minmax(0,1fr);gap:0}
+.tabs{display:flex}
+.inc.tab-fl .col-ul,.inc.tab-ul .col-fl{display:none}
+.fmt-grid,.resp-grid,.f-row,.foot-grid{grid-template-columns:minmax(0,1fr)}
+.fmt-in{padding:32px 24px}
+.aud-item{grid-template-columns:56px minmax(0,1fr);padding:32px 0}
+.fq-a p{padding:0 8px 26px 60px}
+.form{padding:28px 20px}
+.contact{font-size:20px}
+.mgr .photo-col{order:-1}
+}
+@media (min-width:769px){.vstep{display:contents}.vstep::before{display:none}.mk-m{display:none}.vstep > div:first-child{display:none}}
+@media (prefers-reduced-motion:reduce){
+*,*::before,*::after{animation:none !important;transition:none !important}
+.ring{stroke-dashoffset:0}.check{stroke-dashoffset:0}.mark-img{opacity:.95}
+html{scroll-behavior:auto}
+}
+</style>
+</helmet>
+<div class="{{rootCls}}" style="font-family: 'Jost', system-ui, sans-serif; font-weight: 400; color: #ECEDEF; background: #0B0C0E; line-height: 1.6">
+
+<!-- 1. ШАПКА -->
+<header class="hdr {{hdrCls}}">
+<div class="wrap hdr-in">
+<a href="#top" class="brand" aria-label="Digestoroom Сервис — наверх">
+<img src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="">
+<span class="brand-word">
+<span style="font-size: 14px; letter-spacing: 0.34em; color: #ECEDEF">DIGESTOROOM</span>
+<span class="mono" style="font-size: 11px; letter-spacing: 0.34em; color: #AEB4BC">СЕРВИС</span>
+</span>
+</a>
+<nav class="nav" aria-label="Разделы">
+<a href="#how" class="{{nav.how}}">Как работаем</a>
+<a href="#formats" class="{{nav.formats}}">Форматы</a>
+<a href="#manager" class="{{nav.manager}}">Управляющий</a>
+<a href="#faq" class="{{nav.faq}}">Вопросы</a>
+</nav>
+<div class="hdr-act">
+<a class="ico" href="https://t.me/mip_assistance" aria-label="Написать в Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M21.5 3.5 2.8 10.8l6.4 2.3 2.3 6.9 3.4-4.4 4.7 3.4z"></path><path d="m9.2 13.1 12.3-9.6"></path></svg></a>
+<a class="ico" href="https://wa.me/79626966226" aria-label="Написать в WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M3.5 20.5 4.8 16A8.5 8.5 0 1 1 8 19.2z"></path><path d="M9 8.6c0 3.3 3 6.4 6.4 6.4l1.2-1.6-2-1-1 .9c-1-.4-2.3-1.6-2.8-2.8l.9-1-1-2z"></path></svg></a>
+<a href="#contacts" class="btn-hdr">Передать процедуру</a>
+<button type="button" class="burger" aria-label="Открыть меню" onClick="{{openMenu}}"><svg width="20" height="12" viewBox="0 0 20 12" fill="none" stroke="#ECEDEF" stroke-width="1.4"><path d="M0 1h20M0 11h20"></path></svg></button>
+</div>
+</div>
+<div class="progress" style="transform: scaleX({{progress}})"></div>
+</header>
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div class="mm" role="dialog" aria-label="Меню">
+<div class="mm-top">
+<img src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="Digestoroom" style="width: 30px; height: 29px; object-fit: contain">
+<button type="button" class="burger" style="display: inline-flex" aria-label="Закрыть меню" onClick="{{closeMenu}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#ECEDEF" stroke-width="1.4"><path d="M1 1l14 14M15 1 1 15"></path></svg></button>
+</div>
+<nav class="mm-list">
+<a href="#how" onClick="{{closeMenu}}"><span>01</span>Как работаем</a>
+<a href="#formats" onClick="{{closeMenu}}"><span>02</span>Форматы</a>
+<a href="#manager" onClick="{{closeMenu}}"><span>03</span>Управляющий</a>
+<a href="#faq" onClick="{{closeMenu}}"><span>04</span>Вопросы</a>
+</nav>
+<div class="mm-bottom">
+<a href="#contacts" class="btn btn-p" style="background: {{accent}}" onClick="{{closeMenu}}">Передать процедуру</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<a href="https://t.me/mip_assistance" class="btn btn-s" style="min-height: 48px; padding: 0 12px">Telegram</a>
+<a href="https://wa.me/79626966226" class="btn btn-s" style="min-height: 48px; padding: 0 12px">WhatsApp</a>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- 2. ПЕРВЫЙ ЭКРАН -->
+<section id="top" class="hero" onMouseMove="{{heroMove}}">
+<div class="wrap hero-grid">
+<div style="display: flex; flex-direction: column; gap: 28px">
+<div class="label"><i></i>Вы занимаетесь стратегией — мы проводим процедуру</div>
+<h1 class="h1"><span class="b">Комплексное сопровождение процедур банкротства</span><span class="h1-rule" aria-hidden="true"><span class="sline"></span></span><span class="a">физических и юридических лиц</span></h1>
+<p class="lead" style="max-width: 560px">Подключаемся к процедурам банкротства физических и юридических лиц на любом этапе и ведём их до завершения. Работаем по всей России и отвечаем за сроки и результат</p>
+<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 8px">
+<div class="hero-btns" style="display: flex; flex-wrap: wrap; gap: 14px">
+<a href="#contacts" class="btn btn-p" style="background: {{accent}}">Передать процедуру</a>
+<a href="#how" class="btn btn-s">Как это работает</a>
+</div>
+<div class="mono" style="font-size: 12.5px; color: #8E949C">— Свяжемся с вами в течение часа</div>
+</div>
+</div>
+<div class="hero-mark">
+<div class="mark-stage">
+<div class="layer" style="transform: translate3d({{par.x1}}px, {{par.y1}}px, 0)">
+<svg viewBox="0 0 520 520" width="100%" height="100%" aria-hidden="true">
+<defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EEF0F3"></stop><stop offset=".5" stop-color="#6E747C"></stop><stop offset="1" stop-color="#C5CAD1"></stop></linearGradient></defs>
+<circle class="ring" cx="260" cy="260" r="252" stroke="url(#sg)" style="opacity: 0.55"></circle>
+<circle class="ring" cx="260" cy="260" r="204" stroke="#3A3E44" style="animation-delay: .25s"></circle>
+<path class="ring" d="M260 0v26M260 494v26M0 260h26M494 260h26" stroke="#8E949C" style="animation-delay: .5s"></path>
+</svg>
+</div>
+<div class="layer" style="transform: translate3d({{par.x2}}px, {{par.y2}}px, 0)">
+<img class="mark-img" src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="Знак Digestoroom">
+</div>
+</div>
+</div>
+</div>
+<a href="#how" class="scroll-hint"><span class="stem"></span>Как это работает</a>
+</section>
+
+<!-- 3. ЦИФРЫ -->
+<section class="nums" data-rv="nums" aria-label="Цифры">
+<div class="wrap nums-grid">
+<div class="num"><div class="num-v silver-text">{{nums.a}}<span class="num-u">+ лет</span></div><div class="num-c">опыт наших управляющих</div></div>
+<div class="num"><div class="num-v silver-text">{{nums.b}}<span class="num-u">+</span></div><div class="num-c">проектов в работе</div></div>
+<div class="num"><div class="num-v silver-text">{{nums.d}}<span class="num-u">+ млрд ₽</span></div><div class="num-c">в реестрах кредиторов</div></div>
+</div>
+</section>
+
+<!-- 4. КАК ЭТО РАБОТАЕТ -->
+<section id="how" class="sec {{rv.how}}" data-rv="how">
+<div class="wrap">
+<div class="sec-head">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div class="label"><i></i>Как работаем</div>
+<h2 class="h2 rv-up">Вы работаете с клиентом — мы берём на себя процедуру</h2>
+</div>
+<p class="lead rv-up d1">Вы привлекаете нас как субподрядчика. Клиент остаётся вашим, а процедуры ведут наши специалисты</p>
+</div>
+
+<div class="steps">
+<div class="track">
+<div class="sline draw-x"></div>
+<div class="mk">I</div>
+<div class="mk">II</div>
+<div class="mk">III</div>
+<div class="mk end" style="color: {{accent}}">IV</div>
+</div>
+<div class="vstep"><div><div class="mk mk-m">I</div></div><div class="rv-up d1"><h3 class="step-t">Анализируем процедуру перед передачей</h3></div></div>
+<div class="vstep"><div><div class="mk mk-m">II</div></div><div class="rv-up d2"><h3 class="step-t">Заключаем договор на юридическое сопровождение деятельности АУ</h3></div></div>
+<div class="vstep"><div><div class="mk mk-m">III</div></div><div class="rv-up d3"><h3 class="step-t">Ведём процедуру по вашему ТЗ</h3></div></div>
+<div class="vstep"><div><div class="mk mk-m end" style="color: {{accent}}">IV</div></div><div class="rv-up d4"><h3 class="step-t">Завершаем проект или выходим в нужный момент (реверс)</h3></div></div>
+</div>
+</div>
+</section>
+
+<!-- 5. ЧТО ВХОДИТ -->
+<section class="sec {{rv.inc}}" data-rv="inc" style="padding-top: 40px">
+<div class="wrap">
+<div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 72px; max-width: 760px">
+<div class="label"><i></i>Что входит</div>
+<h2 class="h2 rv-up">Полное ведение процедуры до завершения</h2>
+</div>
+<div class="tabs" role="tablist" aria-label="Тип должника">
+<button type="button" role="tab" class="{{tabs.fl}}" aria-selected="{{tabs.flSel}}" onClick="{{setFl}}">Физлица</button>
+<button type="button" role="tab" class="{{tabs.ul}}" aria-selected="{{tabs.ulSel}}" onClick="{{setUl}}">Юрлица</button>
+</div>
+<div class="inc tab-{{tab}}">
+<div class="col-fl rv-up d1">
+<div class="inc-h">Физические лица<span>06</span></div>
+<p class="inc-lead">Включая крупных должников с имуществом и сделками</p>
+<ol class="inc-list">
+<li><span>01</span>Публикации в ЕФРСБ и «Коммерсанте»</li>
+<li><span>02</span>Запросы в госорганы, розыск имущества</li>
+<li><span>03</span>Реестр требований кредиторов</li>
+<li><span>04</span>Финансовый анализ, анализ сделок</li>
+<li><span>05</span>Торги и реализация имущества</li>
+<li><span>06</span>Отчёт и ходатайство о завершении</li>
+</ol>
+</div>
+<div class="col-ul rv-up d2">
+<div class="inc-h">Юридические лица<span>06</span></div>
+<p class="inc-lead">Наблюдение и конкурсное производство</p>
+<ol class="inc-list">
+<li><span>01</span>Анализ финансового состояния должника</li>
+<li><span>02</span>Собрания кредиторов</li>
+<li><span>03</span>Инвентаризация и оценка имущества</li>
+<li><span>04</span>Оспаривание сделок</li>
+<li><span>05</span>Привлечение к субсидиарной ответственности</li>
+<li><span>06</span>Торги, расчёты с кредиторами, завершение</li>
+</ol>
+</div>
+</div>
+<div class="plus">
+<div class="label"><i></i>Также берём на себя</div>
+<div class="plus-grid">
+<div class="rv-up d1"><div class="sline draw-x"></div><div class="plus-n">01</div><h3 class="plus-t">Работа с имуществом</h3></div>
+<div class="rv-up d2"><div class="sline draw-x" style="transition-delay: .2s"></div><div class="plus-n">02</div><h3 class="plus-t">Управленческий функционал при ведении хозяйственной деятельности</h3></div>
+<div class="rv-up d3"><div class="sline draw-x" style="transition-delay: .4s"></div><div class="plus-n">03</div><h3 class="plus-t">Переговорный процесс</h3></div>
+<div class="rv-up d4"><div class="sline draw-x" style="transition-delay: .6s"></div><div class="plus-n">04</div><h3 class="plus-t">Юридическое сопровождение полного цикла</h3></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 6. ФОРМАТЫ -->
+<section id="formats" class="sec {{rv.fmt}}" data-rv="fmt" style="border-top: 1px solid #1F2226">
+<div class="wrap">
+<div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 72px; max-width: 820px">
+<div class="label"><i></i>Форматы работы</div>
+<h2 class="h2 rv-up">Вы решаете, как мы взаимодействуем с вашим клиентом</h2>
+</div>
+<div class="fmt-grid">
+<div class="fmt rv-up d1"><div class="fmt-in">
+<div class="fmt-top"><span class="mono" style="letter-spacing: 0.1em">I</span><span>Вариант I</span></div>
+<h3 class="fmt-t">Изолированно</h3>
+<p class="fmt-p">Работаем только с вами. С конечным заказчиком не контактируем — вся коммуникация по процедуре идёт через вас</p>
+<div class="scheme">
+<svg viewBox="0 0 440 96" width="100%" height="96" role="img" aria-label="Схема: Digestoroom связан только с вами, вы — с клиентом">
+<line x1="78" y1="40" x2="182" y2="40" stroke="#C5CAD1" stroke-width="1"></line>
+<line x1="258" y1="40" x2="362" y2="40" stroke="#C5CAD1" stroke-width="1"></line>
+<path d="M60 22 Q220 -14 380 22" fill="none" stroke="#3A3E44" stroke-width="1" stroke-dasharray="3 5"></path>
+<circle cx="60" cy="40" r="18" fill="#0F1113" stroke="#C5CAD1"></circle>
+<circle cx="220" cy="40" r="18" fill="#C5CAD1" stroke="#C5CAD1"></circle>
+<circle cx="380" cy="40" r="18" fill="#0F1113" stroke="#6E747C"></circle>
+<text x="60" y="84" text-anchor="middle" fill="#AEB4BC" font-size="12" font-family="IBM Plex Mono, monospace">DIGESTOROOM</text>
+<text x="220" y="84" text-anchor="middle" fill="#ECEDEF" font-size="12" font-family="IBM Plex Mono, monospace">ВЫ</text>
+<text x="380" y="84" text-anchor="middle" fill="#8E949C" font-size="12" font-family="IBM Plex Mono, monospace">КЛИЕНТ</text>
+</svg>
+</div>
+</div></div>
+<div class="fmt rv-up d2"><div class="fmt-in">
+<div class="fmt-top"><span class="mono" style="letter-spacing: 0.1em">II</span><span>Вариант II</span></div>
+<h3 class="fmt-t">Совместно с вами</h3>
+<p class="fmt-p">Вместе с вами взаимодействуем с конечным заказчиком — бенефициаром процедуры</p>
+<div class="scheme">
+<svg viewBox="0 0 440 96" width="100%" height="96" role="img" aria-label="Схема: Digestoroom, вы и клиент связаны между собой">
+<line x1="120" y1="64" x2="320" y2="64" stroke="#C5CAD1" stroke-width="1"></line>
+<line x1="120" y1="64" x2="220" y2="16" stroke="#C5CAD1" stroke-width="1"></line>
+<line x1="320" y1="64" x2="220" y2="16" stroke="#C5CAD1" stroke-width="1"></line>
+<circle cx="220" cy="16" r="12" fill="#C5CAD1" stroke="#C5CAD1"></circle>
+<circle cx="120" cy="64" r="12" fill="#0F1113" stroke="#C5CAD1"></circle>
+<circle cx="320" cy="64" r="12" fill="#0F1113" stroke="#C5CAD1"></circle>
+<text x="252" y="20" fill="#ECEDEF" font-size="12" font-family="IBM Plex Mono, monospace">ВЫ</text>
+<text x="120" y="92" text-anchor="middle" fill="#AEB4BC" font-size="12" font-family="IBM Plex Mono, monospace">DIGESTOROOM</text>
+<text x="320" y="92" text-anchor="middle" fill="#AEB4BC" font-size="12" font-family="IBM Plex Mono, monospace">КЛИЕНТ</text>
+</svg>
+</div>
+</div></div>
+</div>
+</div>
+</section>
+
+<!-- 7. С КЕМ РАБОТАЕМ -->
+<section class="sec {{rv.aud}}" data-rv="aud" style="border-top: 1px solid #1F2226">
+<div class="wrap aud">
+<div class="aud-l">
+<div class="label"><i></i>С кем работаем</div>
+<h2 class="h2 rv-up">Сложные процедуры — наша основная работа</h2>
+<p class="lead rv-up d1">Мы выбираем партнёров с нестандартными, интересными кейсами — там, где нужны уникальный опыт и точность</p>
+</div>
+<div>
+<div class="aud-item rv-up d1"><div class="aud-letter">A</div><div><h3 class="aud-t">Юридическим компаниям без своих АУ</h3><p class="aud-p">Продаёте банкротство ФЛ и ЮЛ, но не держите арбитражных управляющих в штате</p></div></div>
+<div class="aud-item rv-up d2"><div class="aud-letter">B</div><div><h3 class="aud-t">Практикам со сложными делами</h3><p class="aud-p">Крупные физлица, банкротство крупных компаний, имущество и сделки под оспаривание</p></div></div>
+<div class="aud-item rv-up d3"><div class="aud-letter">C</div><div><h3 class="aud-t">Федеральным сетям</h3><p class="aud-p">Нужен надёжный партнёр в регионе — работаем по всей России</p></div></div>
+</div>
+</div>
+</section>
+
+<!-- 8. ОТВЕТСТВЕННОСТЬ -->
+<section class="sec resp {{rv.resp}}" data-rv="resp">
+<div class="wrap">
+<div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 80px; max-width: 820px">
+<div class="label"><i></i>Ответственность</div>
+<h2 class="h2 rv-up">Ведём процедуру до конца и отвечаем за результат</h2>
+</div>
+<div class="resp-grid">
+<div class="rv-up d1"><div class="sline draw-x"></div><h3 class="resp-h silver-text">Сроки</h3><p class="resp-p">Соблюдаем процессуальные сроки на каждом этапе процедуры</p></div>
+<div class="rv-up d2"><div class="sline draw-x" style="transition-delay: .35s"></div><h3 class="resp-h silver-text">Эффективность</h3><p class="resp-p">Формируем конкурсную массу, проводим торги, оспариваем сделки</p></div>
+<div class="rv-up d3"><div class="sline draw-x" style="transition-delay: .7s"></div><h3 class="resp-h silver-text">Качество</h3><p class="resp-p">Работаем так, чтобы не было оснований для жалоб в СРО и Росреестр, и защищаем вас от них</p></div>
+</div>
+</div>
+</section>
+
+<!-- 9. АРБИТРАЖНЫЙ УПРАВЛЯЮЩИЙ -->
+<section id="manager" class="sec {{rv.mgr}}" data-rv="mgr">
+<div class="wrap mgr">
+<div style="display: flex; flex-direction: column; gap: 26px">
+<div class="label"><i></i>Арбитражный управляющий</div>
+<h2 class="h2 rv-up" style="font-size: clamp(40px, 4.4vw, 64px)">Илья Мощонский</h2>
+<div class="sig mono rv-up d1"><span>Основатель экосистемы Digestoroom и проекта Digestoroom Сервис</span></div>
+<blockquote class="quote rv-up d2">
+<svg class="quote-mark" width="58" height="40" viewBox="0 0 58 40" aria-hidden="true"><defs><linearGradient id="qg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EEF0F3"></stop><stop offset="1" stop-color="#6E747C"></stop></linearGradient></defs><path d="M0 40 L14 0 L24 0 L14 40 Z M30 40 L44 0 L54 0 L44 40 Z" fill="url(#qg)"></path></svg>
+Мы абсолютно точно анализируем ситуацию, предлагаем варианты решения и обеспечиваем их реализацию, руководствуясь принципами гибкости и оперативности
+</blockquote>
+<div class="awards rv-up d3">
+<div class="aw">«Юрист года» КПП Президента РФ<span>2025</span></div>
+<div class="aw">«Арбитражный управляющий, сотворивший чудо»<span>2024</span></div>
+<div class="aw">Партнёр Казанского международного юридического форума<span>2025</span></div>
+</div>
+</div>
+<div class="photo-col rv-up d1">
+<div class="photo photo-wrap"><img src="./assets/8241832858acfbf7eaee044bfd087623.jpg" alt="Илья Мощонский, арбитражный управляющий"></div>
+</div>
+</div>
+</section>
+
+<!-- 10. ВОПРОСЫ -->
+<section id="faq" class="sec {{rv.faq}}" data-rv="faq" style="border-top: 1px solid #1F2226">
+<div class="wrap faq">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div class="label"><i></i>Вопросы</div>
+<h2 class="h2 rv-up">Частые вопросы партнёров</h2>
+<p class="rv-up d1" style="margin: 8px 0 0; font-size: 16px; color: #9AA0A8">Не нашли ответ? <a href="https://t.me/mip_assistance" style="color: #ECEDEF">Напишите в Telegram</a></p>
+</div>
+<div class="rv-up d1">
+<div class="fq {{fq.c1}}"><button type="button" class="fq-b" aria-expanded="{{fq.a1}}" onClick="{{fq.t1}}"><span class="fq-n">01</span><span class="fq-q">На каком этапе можно передать процедуру?</span><span class="fq-x"></span></button><div class="fq-a"><div><p>На любом. Вы привлекаете нас как субподрядчика и передаёте нам процедуру, а клиент остаётся вашим.</p></div></div></div>
+<div class="fq {{fq.c2}}"><button type="button" class="fq-b" aria-expanded="{{fq.a2}}" onClick="{{fq.t2}}"><span class="fq-n">02</span><span class="fq-q">Кто общается с клиентом во время процедуры?</span><span class="fq-x"></span></button><div class="fq-a"><div><p>Есть два варианта. Мы можем работать изолированно, без контакта с вашим клиентом, — тогда вся коммуникация идёт через вас. Или взаимодействуем с конечным заказчиком совместно с вами.</p></div></div></div>
+<div class="fq {{fq.c3}}"><button type="button" class="fq-b" aria-expanded="{{fq.a3}}" onClick="{{fq.t3}}"><span class="fq-n">03</span><span class="fq-q">В каких регионах вы работаете?</span><span class="fq-x"></span></button><div class="fq-a"><div><p>По всей России.</p></div></div></div>
+<div class="fq {{fq.c4}}"><button type="button" class="fq-b" aria-expanded="{{fq.a4}}" onClick="{{fq.t4}}"><span class="fq-n">04</span><span class="fq-q">Как вы отчитываетесь перед нами?</span><span class="fq-x"></span></button><div class="fq-a"><div><p>Регулярно отчитываемся перед заказчиком о ходе каждой процедуры.</p></div></div></div>
+<div class="fq {{fq.c5}}"><button type="button" class="fq-b" aria-expanded="{{fq.a5}}" onClick="{{fq.t5}}"><span class="fq-n">05</span><span class="fq-q">Можно начать с одной процедуры?</span><span class="fq-x"></span></button><div class="fq-a"><div><p>Да, можно.</p></div></div></div>
+</div>
+</div>
+</section>
+
+<!-- 11. КОНТАКТЫ -->
+<section id="contacts" class="sec cta">
+<img class="cta-mark" src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="">
+<div class="wrap cta-grid">
+<div style="display: flex; flex-direction: column; gap: 28px">
+<div class="label"><i></i>Контакты</div>
+<h2 class="h2" style="font-size: clamp(38px, 4.2vw, 60px)">Передайте первую процедуру</h2>
+<p class="lead">Расскажите о процедуре — обсудим формат работы</p>
+<div class="mono" style="font-size: 12.5px; color: #8E949C">— Ответим в течение часа</div>
+</div>
+<div style="border-top: 1px solid #1F2226">
+<a class="contact" href="tel:+79626966226" style="font-size: clamp(24px, 2.6vw, 36px); padding: 30px 0">+7 962 696-62-26<small>Телефон</small></a>
+<a class="contact" href="https://t.me/mip_assistance" style="font-size: clamp(24px, 2.6vw, 36px); padding: 30px 0">@mip_assistance<small>Telegram</small></a>
+<a class="contact" href="https://wa.me/79626966226" style="font-size: clamp(24px, 2.6vw, 36px); padding: 30px 0">+7 962 696-62-26<small>WhatsApp</small></a>
+<a class="contact" href="https://t.me/digestoroom" style="font-size: clamp(24px, 2.6vw, 36px); padding: 30px 0">Digestoroom<small>Telegram-канал</small></a>
+</div>
+</div>
+</section>
+
+<!-- 12. ФУТЕР -->
+<footer class="foot">
+<div class="wrap">
+<div class="foot-grid">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<img src="./assets/bca415a2debcea6e303c80181847d6ca.png" alt="Digestoroom" style="width: 150px; height: auto; opacity: 0.9">
+<div class="req">ООО «Дигесторум»<br>Юридический адрес: 191124, г. Санкт-Петербург,<br>Новгородская ул., д. 23, литера А, помещ. 14-Н<br>ИНН / КПП: 7807196315 / 784201001<br>ОГРН: 1187847059850</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<a href="tel:+79626966226" style="color: #ECEDEF">+7 962 696-62-26</a>
+<a href="https://t.me/mip_assistance" style="color: #ECEDEF">Telegram @mip_assistance</a>
+<a href="https://t.me/digestoroom" style="color: #ECEDEF">Канал Digestoroom</a>
+<a href="#policy" style="color: #9AA0A8">Политика конфиденциальности</a>
+</div>
+<div style="display: flex; justify-content: flex-end; align-items: flex-start">
+<a href="#top" class="top-btn" aria-label="Наверх"><svg width="14" height="18" viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M7 17V1M1 7l6-6 6 6"></path></svg></a>
+</div>
+</div>
+</div>
+<div class="word silver-text" aria-hidden="true">DIGESTOROOM</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F2F3F5","options":["#F2F3F5","#D6DEE8","#C9D4E2"],"section":"Цвет"},"$preview":{"width":1440,"height":8600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      anim: false, scrolled: false, progress: 0, active: '', menuOpen: false,
+      rv: { nums: '', how: '', inc: '', fmt: '', aud: '', resp: '', mgr: '', faq: '' },
+      nums: { a: 12, b: 100, d: 10 },
+      par: { x1: 0, y1: 0, x2: 0, y2: 0 },
+      tab: 'fl',
+      faq: { 1: true, 2: false, 3: false, 4: false, 5: false },
+      form: { name: '', phone: '', company: '', proc: '', about: '' },
+      err: {}, consent: false, status: 'idle'
+    };
+  }
+
+  componentDidMount() {
+    var mm = function (q) { try { return window.matchMedia(q).matches; } catch (e) { return false; } };
+    var reduce = mm('(prefers-reduced-motion: reduce)');
+    this._hover = !reduce && mm('(hover: hover) and (pointer: fine)');
+    var self = this;
+    this._onScroll = function () {
+      if (self._raf) return;
+      self._raf = requestAnimationFrame(function () { self._raf = null; self.updScroll(); });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll);
+    this.updScroll();
+    if (!reduce && typeof IntersectionObserver !== 'undefined') {
+      this.setState({ anim: true, nums: { a: 0, b: 0, d: 0 } });
+      this._io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            self._io.unobserve(en.target);
+            self.reveal(en.target.getAttribute('data-rv'));
+          }
+        });
+      }, { threshold: 0.15 });
+      setTimeout(function () {
+        document.querySelectorAll('[data-rv]').forEach(function (el) { self._io.observe(el); });
+      }, 80);
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+    if (this._io) this._io.disconnect();
+    if (this._t) clearTimeout(this._t);
+  }
+
+  updScroll() {
+    var y = window.scrollY || 0;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = h > 0 ? Math.min(1, y / h) : 0;
+    var mid = window.innerHeight * 0.4, active = '';
+    ['how', 'formats', 'manager', 'faq'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) { var r = el.getBoundingClientRect(); if (r.top < mid && r.bottom > mid) active = id; }
+    });
+    this.setState({ scrolled: y > 24, progress: progress.toFixed(4), active: active });
+  }
+
+  reveal(k) {
+    var rv = Object.assign({}, this.state.rv); rv[k] = 'in';
+    this.setState({ rv: rv });
+    if (k === 'nums') this.countUp();
+  }
+
+  countUp() {
+    var self = this, t0 = performance.now(), d = 1200;
+    var step = function (t) {
+      var p = Math.min(1, (t - t0) / d), e = 1 - Math.pow(1 - p, 3);
+      self.setState({ nums: { a: Math.round(12 * e), b: Math.round(100 * e), d: Math.round(10 * e) } });
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  fmtPhone(raw, prev) {
+    var d = String(raw).replace(/\D/g, '');
+    var pd = String(prev || '').replace(/\D/g, '');
+    if (raw.length < String(prev || '').length && d === pd) d = d.slice(0, -1);
+    if (!d) return '';
+    if (d[0] === '8') d = '7' + d.slice(1);
+    if (d[0] !== '7') d = '7' + d;
+    d = d.slice(0, 11);
+    var out = '+7';
+    if (d.length > 1) out += ' (' + d.slice(1, 4);
+    if (d.length >= 4) out += ')';
+    if (d.length > 4) out += ' ' + d.slice(4, 7);
+    if (d.length > 7) out += '-' + d.slice(7, 9);
+    if (d.length > 9) out += '-' + d.slice(9, 11);
+    return out;
+  }
+
+  setField(k, v) {
+    var f = Object.assign({}, this.state.form); f[k] = v;
+    var err = Object.assign({}, this.state.err); delete err[k];
+    this.setState({ form: f, err: err });
+  }
+
+  renderVals() {
+    var s = this.state, self = this;
+    var accent = this.props.accent ?? '#F2F3F5';
+    var preview = this.props.formState ?? 'live';
+    var status = preview === 'success' ? 'success' : (preview === 'error' ? 'error' : s.status);
+    var on = (id) => (s.active === id ? 'on' : '');
+    var fq = {};
+    [1, 2, 3, 4, 5].forEach(function (i) {
+      fq['c' + i] = s.faq[i] ? 'open' : '';
+      fq['a' + i] = s.faq[i] ? 'true' : 'false';
+      fq['t' + i] = function () { var n = Object.assign({}, self.state.faq); n[i] = !n[i]; self.setState({ faq: n }); };
+    });
+    return {
+      accent: accent,
+      rootCls: s.anim ? 'anim' : '',
+      hdrCls: s.scrolled ? 'scrolled' : '',
+      progress: s.progress,
+      nav: { how: on('how'), formats: on('formats'), manager: on('manager'), faq: on('faq') },
+      rv: s.rv,
+      nums: s.nums,
+      par: s.par,
+      menuOpen: s.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      heroMove: (e) => {
+        if (!this._hover) return;
+        var r = e.currentTarget.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        if (this._pr) return;
+        this._pr = requestAnimationFrame(() => {
+          this._pr = null;
+          this.setState({ par: { x1: (x * -16).toFixed(1), y1: (y * -16).toFixed(1), x2: (x * 10).toFixed(1), y2: (y * 10).toFixed(1) } });
+        });
+      },
+      tab: s.tab,
+      tabs: { fl: s.tab === 'fl' ? 'on' : '', ul: s.tab === 'ul' ? 'on' : '', flSel: s.tab === 'fl' ? 'true' : 'false', ulSel: s.tab === 'ul' ? 'true' : 'false' },
+      setFl: () => this.setState({ tab: 'fl' }),
+      setUl: () => this.setState({ tab: 'ul' }),
+      fq: fq,
+      form: s.form,
+      on: {
+        name: (e) => this.setField('name', e.target.value),
+        phone: (e) => this.setField('phone', this.fmtPhone(e.target.value, this.state.form.phone)),
+        company: (e) => this.setField('company', e.target.value),
+        proc: (e) => this.setField('proc', e.target.value),
+        about: (e) => this.setField('about', e.target.value)
+      },
+      err: { name: !!s.err.name, phone: !!s.err.phone, nameCls: s.err.name ? 'err' : '', phoneCls: s.err.phone ? 'err' : '' },
+      consent: s.consent,
+      toggleConsent: () => this.setState({ consent: !this.state.consent }),
+      submitDisabled: !s.consent || status === 'sending',
+      submitLabel: status === 'sending' ? 'Отправляем…' : (status === 'error' ? 'Отправить ещё раз' : 'Отправить заявку'),
+      showDone: status === 'success',
+      showForm: status !== 'success',
+      showError: status === 'error',
+      submit: (e) => {
+        e.preventDefault();
+        var st = this.state, err = {};
+        if (!st.form.name.trim()) err.name = 1;
+        if (st.form.phone.replace(/\D/g, '').length !== 11) err.phone = 1;
+        if (Object.keys(err).length) { this.setState({ err: err }); return; }
+        if (!st.consent || st.status === 'sending') return;
+        this.setState({ status: 'sending' });
+        this._t = setTimeout(() => this.setState({ status: 'success' }), 1400);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
