@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Digestoroom Сервис</title>
-<script src="./react.js"></script>
-<script src="./react-dom.js"></script>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -14,9 +14,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-@font-face{font-family:'Evolventa';src:url('./e7a9aaf4b480b4ccf91226fbe61f2c07.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
-@font-face{font-family:'Evolventa';src:url('./69bcc99ddb035b713990b3849dd9380e.ttf') format('truetype');font-weight:400;font-style:italic;font-display:swap}
-@font-face{font-family:'Evolventa';src:url('./afbe1849c812dc7125a6c088e7f908a0.ttf') format('truetype');font-weight:700;font-style:italic;font-display:swap}
+@font-face{font-family:'Evolventa';src:url('./assets/e7a9aaf4b480b4ccf91226fbe61f2c07.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Evolventa';src:url('./assets/69bcc99ddb035b713990b3849dd9380e.ttf') format('truetype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Evolventa';src:url('./assets/afbe1849c812dc7125a6c088e7f908a0.ttf') format('truetype');font-weight:700;font-style:italic;font-display:swap}
 body{margin:0;background:#0B0C0E}
 a{color:#D9DDE2}a:hover{color:#FFFFFF}
 *{box-sizing:border-box}
@@ -349,7 +349,7 @@ html{scroll-behavior:auto}
 <header class="hdr {{hdrCls}}">
 <div class="wrap hdr-in">
 <a href="#top" class="brand" aria-label="Digestoroom Сервис — наверх">
-<img src="./b47dc5152bcf5690ad0011bb02f51f51.png" alt="">
+<img src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="">
 <span class="brand-word">
 <span style="font-size: 14px; letter-spacing: 0.34em; color: #ECEDEF">DIGESTOROOM</span>
 <span class="mono" style="font-size: 11px; letter-spacing: 0.34em; color: #AEB4BC">СЕРВИС</span>
@@ -374,7 +374,7 @@ html{scroll-behavior:auto}
 <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
 <div class="mm" role="dialog" aria-label="Меню">
 <div class="mm-top">
-<img src="./b47dc5152bcf5690ad0011bb02f51f51.png" alt="Digestoroom" style="width: 30px; height: 29px; object-fit: contain">
+<img src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="Digestoroom" style="width: 30px; height: 29px; object-fit: contain">
 <button type="button" class="burger" style="display: inline-flex" aria-label="Закрыть меню" onClick="{{closeMenu}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#ECEDEF" stroke-width="1.4"><path d="M1 1l14 14M15 1 1 15"></path></svg></button>
 </div>
 <nav class="mm-list">
@@ -603,7 +603,7 @@ html{scroll-behavior:auto}
 </div>
 </div>
 <div class="photo-col rv-up d1">
-<div class="photo photo-wrap"><img src="./8241832858acfbf7eaee044bfd087623.jpg" alt="Илья Мощонский, арбитражный управляющий"></div>
+<div class="photo photo-wrap"><img src="./assets/8241832858acfbf7eaee044bfd087623.jpg" alt="Илья Мощонский, арбитражный управляющий"></div>
 </div>
 </div>
 </section>
@@ -628,7 +628,7 @@ html{scroll-behavior:auto}
 
 <!-- 11. КОНТАКТЫ -->
 <section id="contacts" class="sec cta">
-<img class="cta-mark" src="./b47dc5152bcf5690ad0011bb02f51f51.png" alt="">
+<img class="cta-mark" src="./assets/b47dc5152bcf5690ad0011bb02f51f51.png" alt="">
 <div class="wrap cta-grid">
 <div style="display: flex; flex-direction: column; gap: 28px">
 <div class="label"><i></i>Контакты</div>
@@ -650,7 +650,7 @@ html{scroll-behavior:auto}
 <div class="wrap">
 <div class="foot-grid">
 <div style="display: flex; flex-direction: column; gap: 22px">
-<img src="./bca415a2debcea6e303c80181847d6ca.png" alt="Digestoroom" style="width: 150px; height: auto; opacity: 0.9">
+<img src="./assets/bca415a2debcea6e303c80181847d6ca.png" alt="Digestoroom" style="width: 150px; height: auto; opacity: 0.9">
 <div class="req">ООО «Дигесторум»<br>Юридический адрес: 191124, г. Санкт-Петербург,<br>Новгородская ул., д. 23, литера А, помещ. 14-Н<br>ИНН / КПП: 7807196315 / 784201001<br>ОГРН: 1187847059850</div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px">
